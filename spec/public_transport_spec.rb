@@ -1,5 +1,5 @@
 require './oystercard.rb'
 require './public_transport.rb'
 
-describe Oystercard do 
+describe PublicTransport do
 end
