@@ -1,5 +1,6 @@
 require './oystercard.rb'
 require './public_transport.rb'
+require "./station"
 
 describe Oystercard do
 
@@ -39,23 +40,21 @@ describe Oystercard do
     end
 
     it 'raises an error if there is less than single journey price on the card' do
+      journey = double()
       station = double()
+      allow(journey).to receive(:fare_in) {(0)}
       allow(station).to receive(:get_station) { "Bexleyheath" }
-      expect{ @oystercard.touch_in(station) }.to raise_error'Not enough money on the card'
+      expect{ @oystercard.touch_in(journey) }.to raise_error'Not enough money on the card'
     end
 
-    it 'changes in_journey? to true' do
-      station = double()
-      allow(station).to receive(:get_station) { "Bexleyheath" }
-      @oystercard.top_up(single_journeys_price)
-      @oystercard.touch_in(station)
-      expect(@oystercard.in_journey?).to eq true
-    end
+
 
     it 'stores the entry station' do
+     journey = double()
      station = double()
      allow(station).to receive(:get_station) { "Bexleyheath" }
-     @oystercard.top_up(single_journeys_price)
+     allow(journey).to receive(:fare_in) {1}
+     @oystercard.top_up(test_amount)
      @oystercard.touch_in(station)
      expect(@oystercard.entry_station).to eq station.get_station
     end
@@ -67,14 +66,14 @@ describe Oystercard do
       @oystercard = Oystercard.new
     end
 
-    it 'changes in_journey? to false' do
-      expect(@oystercard.in_journey?).to eq false
-    end
+
 
     it 'stores the trips' do
+      journey = double()
       station = double()
       allow(station).to receive(:get_station) { "Bexleyheath" }
-      @oystercard.top_up(single_journeys_price)
+      allow(journey).to receive(:fare_out ) {1}
+      @oystercard.top_up(test_amount)
       @oystercard.touch_in(station)
       @oystercard.touch_out(station)
       expect(@oystercard.trips).to eq [{ :entry_station=>"Bexleyheath", :exit_station=>"Bexleyheath" }]

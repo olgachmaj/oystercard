@@ -7,9 +7,11 @@ class Station
     @name = name
     @zone = zone
   end
+  
   def get_station
     @name
   end
+
   def get_zone
     @zone
   end
